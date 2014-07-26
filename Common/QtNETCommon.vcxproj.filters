@@ -25,4 +25,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\QtNETCommon.props" />
+    <None Include="..\QtNETMacros.props" />
+    <None Include="..\QtNETProjectTemplate.vcxproj" />
+  </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+*.i
 
 # Compiled Dynamic libraries
 *.so
@@ -19,6 +20,18 @@
 *.exe
 *.out
 *.app
+
+# Output Folders
+bin
+generated
+
+# Visual Studio Files
+*.user
+*.moc.*
+*.sdf
+*.opensdf
+*.suo
+
 
 # =========================
 # Operating System Files
