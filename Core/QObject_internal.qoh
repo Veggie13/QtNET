@@ -1,0 +1,36 @@
+#pragma once
+#include "QtNET.h"
+
+#pragma managed (push, off)
+#include <QtCore/QObject>
+#pragma managed (pop)
+
+namespace helper
+{
+    typedef NATIVE(QObject) QObject;
+    typedef NATIVE(QEvent) QEvent;
+    typedef NATIVE(QString) QString;
+    class QObject_internal : public QObject
+    {
+        Q_OBJECT_PREPARE
+        Q_OBJECT
+
+    public:
+        QObject_internal(gcroot<LOCAL(QObject)^>);
+        QObject_internal(gcroot<LOCAL(QObject)^>, QObject*);
+
+        bool event(QEvent*);
+        virtual bool base_event(QEvent*);
+
+        bool eventFilter(QObject*, QEvent*);
+        virtual bool base_eventFilter(QObject*, QEvent*);
+
+    protected slots:
+        void onDestroyed(QObject*);
+        void onObjectNameChanged(const QString&);
+
+    private:
+        void connectToWrapper();
+        gcroot<LOCAL(QObject)^> _wrapper;
+    };
+}

@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\QtNETCommon.vcxproj", "{F7E34E11-F570-4B41-BB5F-E24BE17A5713}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\QtNETCore.vcxproj", "{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Widgets", "Widgets\QtNETWidgets.vcxproj", "{6E495169-068E-4EA4-8C7E-E858409FACF6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9} = {D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7E34E11-F570-4B41-BB5F-E24BE17A5713}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7E34E11-F570-4B41-BB5F-E24BE17A5713}.Debug|Win32.Build.0 = Debug|Win32
+		{F7E34E11-F570-4B41-BB5F-E24BE17A5713}.Release|Win32.ActiveCfg = Release|Win32
+		{F7E34E11-F570-4B41-BB5F-E24BE17A5713}.Release|Win32.Build.0 = Release|Win32
+		{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}.Debug|Win32.Build.0 = Debug|Win32
+		{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}.Release|Win32.ActiveCfg = Release|Win32
+		{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}.Release|Win32.Build.0 = Release|Win32
+		{6E495169-068E-4EA4-8C7E-E858409FACF6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6E495169-068E-4EA4-8C7E-E858409FACF6}.Debug|Win32.Build.0 = Debug|Win32
+		{6E495169-068E-4EA4-8C7E-E858409FACF6}.Release|Win32.ActiveCfg = Release|Win32
+		{6E495169-068E-4EA4-8C7E-E858409FACF6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)QtNETMacros.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D25B4B84-4EB4-4D7A-AAE3-1CC30D29F2F9}</ProjectGuid>
+    <ProjectName>Core</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(SolutionDir)QtNETCommon.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="QChar.cpp" />
+    <ClCompile Include="QEvent.cpp" />
+    <ClCompile Include="QObject.cpp" />
+    <ClCompile Include="QString.cpp" />
+    <ClCompile Include="QtNET.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="QChar.h" />
+    <ClInclude Include="QEvent.h" />
+    <ClInclude Include="QObject.h" />
+    <ClInclude Include="QString.h" />
+    <ClInclude Include="QtNET.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="QObject_internal.qoh">
+      <FileType>Document</FileType>
+      <Command>"$(QT_BIN)\moc.exe" -o "$(ProjectDir)generated\%(Filename).moc.cpp" "%(FullPath)"</Command>
+      <Message>Qt MOC : %(Identity) --&gt; %(Filename).moc.cpp</Message>
+      <Outputs>$(ProjectDir)generated\%(Filename).moc.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
