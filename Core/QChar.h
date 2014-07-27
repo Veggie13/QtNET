@@ -10,9 +10,11 @@ NAMESPACE_BEGIN;
     WRAPPER(QChar)
     {
     public:
-        QChar(const NATIVE(QChar)&);
         QChar();
         QChar(wchar_t);
+
+    internal:
+        QChar(const NATIVE(QChar)&);
     };
 
 NAMESPACE_END;

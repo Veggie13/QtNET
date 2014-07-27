@@ -2,7 +2,6 @@
 
 #include "QWidget.h"
 
-
 NAMESPACE_BEGIN;
 
 QWidget::QWidget()
@@ -11,17 +10,22 @@ QWidget::QWidget()
 }
 
 QWidget::QWidget(QWidget^ parent)
-    :   NativeInheritWrapper(init<NATIVE(QWidget)>(parent), true)
+    :   NativeInheritWrapper(init<NATIVE(QWidget)>(parent))
 {
 }
 
 QWidget::QWidget(QWidget^ parent, WindowType f)
-    :   NativeInheritWrapper(init<NATIVE(QWidget)>(parent, f), true)
+    :   NativeInheritWrapper(init<NATIVE(QWidget)>(parent, f))
 {
 }
 
-QWidget::QWidget(NATIVE(QWidget)* native, bool destroy)
-    :   NativeInheritWrapper(native, destroy)
+QWidget::QWidget(NATIVE(QWidget)* native)
+    :   NativeInheritWrapper(native)
+{
+}
+
+QWidget::QWidget(NATIVE(QWidget)& native)
+    :   NativeInheritWrapper(native)
 {
 }
 

@@ -9,7 +9,7 @@ using namespace System::Linq;
 NAMESPACE_BEGIN;
 
 QApplication::QApplication(array<String^>^ args)
-    :   NativeWrapper(init(args), true)
+    :   NativeWrapper(init(args))
 {
 }
 

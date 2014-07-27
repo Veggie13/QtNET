@@ -9,10 +9,10 @@
 using namespace System;
 
 NAMESPACE_BEGIN;
-private ref class QObject_basic : QObject
+ref class QObject_basic : QObject
 {
 public:
-    QObject_basic(NATIVE(QObject)* obj) : QObject(obj, false) {}
+    QObject_basic(NATIVE(QObject)& obj) : QObject(obj) {}
 
     virtual bool Event(LOCAL(QEvent)^ evt) override
     {
@@ -53,7 +53,7 @@ void QObject_internal::connectToWrapper()
 
 bool QObject_internal::event(NATIVE(QEvent)* evt)
 {
-    return _wrapper->Event(gcnew LOCAL(QEvent)(evt, false));
+    return _wrapper->Event(gcnew LOCAL(QEvent)(*evt));
 }
 
 bool QObject_internal::base_event(NATIVE(QEvent)* evt)
@@ -63,7 +63,7 @@ bool QObject_internal::base_event(NATIVE(QEvent)* evt)
 
 bool QObject_internal::eventFilter(QObject* obj, NATIVE(QEvent)* evt)
 {
-    return _wrapper->eventFilter(gcnew LOCAL(QObject_basic)(obj), gcnew LOCAL(QEvent)(evt, false));
+    return _wrapper->eventFilter(gcnew LOCAL(QObject_basic)(*obj), gcnew LOCAL(QEvent)(*evt));
 }
 
 bool QObject_internal::base_eventFilter(QObject* obj, NATIVE(QEvent)* evt)
@@ -73,7 +73,7 @@ bool QObject_internal::base_eventFilter(QObject* obj, NATIVE(QEvent)* evt)
 
 void QObject_internal::onDestroyed(NATIVE(QObject)* o)
 {
-    _wrapper->emitDestroyed((o == NULL) ? nullptr : gcnew LOCAL(QObject_basic)(o));
+    _wrapper->emitDestroyed((o == NULL) ? nullptr : gcnew LOCAL(QObject_basic)(*o));
 }
 
 void QObject_internal::onObjectNameChanged(const NATIVE(QString)& name)
@@ -86,28 +86,33 @@ void QObject_internal::onObjectNameChanged(const NATIVE(QString)& name)
 NAMESPACE_BEGIN;
 
 QObject::QObject()
-    :   NativeWrapper(initHelper(NULL), true)
+    :   NativeWrapper(initHelper(this, NULL))
 {
 }
 
 QObject::QObject(QObject^ parent)
-    :   NativeWrapper(initHelper(parent->ptr()), true)
+    :   NativeWrapper(initHelper(this, parent->ptr()))
 {
 }
 
-QObject::QObject(NATIVE(QObject)* o, bool destroy)
-    :   NativeWrapper(o, destroy)
+QObject::QObject(NATIVE(QObject)* o)
+    :   NativeWrapper(o)
 {
 }
 
-NATIVE(QObject)* QObject::initHelper()
+QObject::QObject(NATIVE(QObject)& o)
+    :   NativeWrapper(o)
 {
-    return new ::helper::QObject_internal(this);
 }
 
-NATIVE(QObject)* QObject::initHelper(NATIVE(QObject*) parent)
+::helper::QObject_internal* QObject::initHelper(LOCAL(QObject)^ wrapper)
 {
-    return new ::helper::QObject_internal(this, parent);
+    return new ::helper::QObject_internal(wrapper);
+}
+
+::helper::QObject_internal* QObject::initHelper(LOCAL(QObject)^ wrapper, NATIVE(QObject*) parent)
+{
+    return new ::helper::QObject_internal(wrapper, parent);
 }
 
 ::helper::QObject_internal& QObject::ref2()
@@ -142,7 +147,7 @@ bool QObject::IsWindowType::get()
 
 QObject^ QObject::Parent::get()
 {
-    return gcnew QObject(ref().parent(), false);
+    return gcnew QObject_basic(*ref().parent());
 }
 
 void QObject::Parent::set(QObject^ val)

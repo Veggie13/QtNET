@@ -18,7 +18,7 @@ QString::QString()
 }
 
 QString::QString(String^ str)
-    :   NativeWrapper(init(str), true)
+    :   NativeWrapper(init(str))
 {
 }
 

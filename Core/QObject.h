@@ -37,14 +37,15 @@ public:
     void removeEventFilter(QObject^);
 
 protected:
-    NATIVE(QObject)* initHelper();
-    NATIVE(QObject)* initHelper(NATIVE(QObject)* parent);
+    static ::helper::QObject_internal* initHelper(QObject^);
+    static ::helper::QObject_internal* initHelper(QObject^, NATIVE(QObject)* parent);
 
     ::helper::QObject_internal& ref2();
     ::helper::QObject_internal* ptr2();
 
 internal:
-    QObject(NATIVE(QObject)*, bool);
+    QObject(NATIVE(QObject)*);
+    QObject(NATIVE(QObject)&);
 
     void emitDestroyed(QObject^);
     void emitObjectNameChanged(LOCAL(QString)^);

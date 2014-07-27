@@ -12,8 +12,13 @@ QEvent::QEvent(LOCAL(QEvent)::Type type)
 {
 }
 
-QEvent::QEvent(NATIVE(QEvent)* obj, bool destroy)
-    :   NativeWrapper(obj, destroy)
+QEvent::QEvent(NATIVE(QEvent)* obj)
+    :   NativeWrapper(obj)
+{
+}
+
+QEvent::QEvent(NATIVE(QEvent)& obj)
+    :   NativeWrapper(obj)
 {
 }
 

@@ -5,52 +5,60 @@ namespace QtNET {
     template <class NativeT>
     NativeT* nativeDefault() { return new NativeT; }
     
-    template <class NativeT>
+    template <class NativeT, class OutT = NativeT>
     struct NativeInitializer
     {
-        static NativeT* init() { return nativeDefault<NativeT>(); }
+        static OutT* init() { return nativeDefault<NativeT>(); }
         template <typename T1>
-        static NativeT* init(T1 a1) { return new NativeT(a1); }
+        static OutT* init(T1 a1) { return new NativeT(a1); }
         template <typename T1, typename T2>
-        static NativeT* init(T1 a1, T2 a2) { return new NativeT(a1, a2); }
+        static OutT* init(T1 a1, T2 a2) { return new NativeT(a1, a2); }
         template <typename T1, typename T2, typename T3>
-        static NativeT* init(T1 a1, T2 a2, T3 a3) { return new NativeT(a1, a2, a3); }
+        static OutT* init(T1 a1, T2 a2, T3 a3) { return new NativeT(a1, a2, a3); }
         template <typename T1, typename T2, typename T3, typename T4>
-        static NativeT* init(T1 a1, T2 a2, T3 a3, T4 a4) { return new NativeT(a1, a2, a3, a4); }
+        static OutT* init(T1 a1, T2 a2, T3 a3, T4 a4) { return new NativeT(a1, a2, a3, a4); }
+    };
+
+    template <typename NativeT>
+    struct NullDeleter
+    {
+        void operator()(NativeT*) {}
     };
 
 #define DISABLE_DEFAULT(CLASS_NAME) template <> \
-        CLASS_NAME * QtNET::nativeDefault< NATIVE(CLASS_NAME) >() { return NULL; }
+        NATIVE(CLASS_NAME) * QtNET::nativeDefault< NATIVE(CLASS_NAME) >() { return NULL; }
 
     template <class NT>
     public ref class NativeWrapper
     {
-        bool _destroy;
-        bool _isDisposed;
-        NT* _native;
-
     public:
         typedef NT NativeT;
         typedef NativeWrapper<NativeT> WrapperT;
+        typedef std::shared_ptr<NativeT> PtrT;
+
+    private:
+        bool _isDisposed;
+        PtrT* _native;
 
     protected:
-        NativeWrapper(NativeT* native, bool destroy) : _destroy(destroy), _isDisposed(false), _native(native) {}
-        NativeWrapper() : _destroy(true), _isDisposed(false), _native(NativeInitializer<NativeT>::init()) {}
+        NativeWrapper(NativeT* native) : _isDisposed(false), _native(new PtrT(native, NullDeleter<NT>())) {}
+        NativeWrapper(NativeT& native) : _isDisposed(false), _native(new PtrT(&native, NullDeleter<NT>())) {}
+        NativeWrapper() : _isDisposed(false), _native(new PtrT(NativeInitializer<NativeT>::init())) {}
         template <typename T1>
-        NativeWrapper(T1 a1) : _destroy(true), _isDisposed(false), _native(NativeInitializer<NativeT>::init(a1)) {}
+        NativeWrapper(T1 a1) : _isDisposed(false), _native(new PtrT(NativeInitializer<NativeT>::init(a1))) {}
         template <typename T1, typename T2>
-        NativeWrapper(T1 a1, T2 a2) : _destroy(true), _isDisposed(false), _native(NativeInitializer<NativeT>::init(a1, a2)) {}
+        NativeWrapper(T1 a1, T2 a2) : _isDisposed(false), _native(new PtrT(NativeInitializer<NativeT>::init(a1, a2))) {}
         template <typename T1, typename T2, typename T3>
-        NativeWrapper(T1 a1, T2 a2, T3 a3) : _destroy(true), _isDisposed(false), _native(NativeInitializer<NativeT>::init(a1, a2, a3)) {}
+        NativeWrapper(T1 a1, T2 a2, T3 a3) : _isDisposed(false), _native(new PtrT(NativeInitializer<NativeT>::init(a1, a2, a3))) {}
         template <typename T1, typename T2, typename T3, typename T4>
-        NativeWrapper(T1 a1, T2 a2, T3 a3, T4 a4) : _destroy(true), _isDisposed(false), _native(NativeInitializer<NativeT>::init(a1, a2, a3, a4)) {}
+        NativeWrapper(T1 a1, T2 a2, T3 a3, T4 a4) : _isDisposed(false), _native(new PtrT(NativeInitializer<NativeT>::init(a1, a2, a3, a4))) {}
 
         virtual void disposeManaged() {}
 
     public:
         virtual ~NativeWrapper()
         {
-            if (!_destroy && _isDisposed) return;
+            if (_isDisposed) return;
             disposeManaged();
             this->!NativeWrapper();
             _isDisposed = true;
@@ -58,13 +66,13 @@ namespace QtNET {
 
         !NativeWrapper()
         {
-            if (_destroy) delete _native;
+            if (_native) delete _native;
             _native = NULL;
         }
 
     internal:
-        NativeT& ref() { return *_native; }
-        NativeT* ptr() { return _native; }
+        NativeT& ref() { return **_native; }
+        NativeT* ptr() { return _native->get(); }
     };
 
     template <typename BaseT, typename BNT, class NT>
@@ -76,16 +84,17 @@ namespace QtNET {
         typedef NativeInheritWrapper<BaseT, BNT, NT> WrapperT;
 
     protected:
-        NativeInheritWrapper() : BaseT(new NativeT(), true) {}
-        NativeInheritWrapper(NativeT* native, bool destroy) : BaseT(native, destroy) {}
+        NativeInheritWrapper(NativeT* native) : BaseT(native) {}
+        NativeInheritWrapper(NativeT& native) : BaseT(native) {}
+        NativeInheritWrapper() : BaseT(NativeInitializer<NativeT, BaseNativeT>::init()) {}
         template <typename T1>
-        NativeInheritWrapper(T1 a1) : BaseT(new NativeT(a1), true) {}
+        NativeInheritWrapper(T1 a1) : BaseT(NativeInitializer<NativeT, BaseNativeT>::init(a1)) {}
         template <typename T1, typename T2>
-        NativeInheritWrapper(T1 a1, T2 a2) : BaseT(new NativeT(a1, a2), true) {}
+        NativeInheritWrapper(T1 a1, T2 a2) : BaseT(NativeInitializer<NativeT, BaseNativeT>::init(a1, a2)) {}
         template <typename T1, typename T2, typename T3>
-        NativeInheritWrapper(T1 a1, T2 a2, T3 a3) : BaseT(new NativeT(a1, a2, a3), true) {}
+        NativeInheritWrapper(T1 a1, T2 a2, T3 a3) : BaseT(NativeInitializer<NativeT, BaseNativeT>::init(a1, a2, a3)) {}
         template <typename T1, typename T2, typename T3, typename T4>
-        NativeInheritWrapper(T1 a1, T2 a2, T3 a3, T4 a4) : BaseT(new NativeT(a1, a2, a3, a4), true) {}
+        NativeInheritWrapper(T1 a1, T2 a2, T3 a3, T4 a4) : BaseT(NativeInitializer<NativeT, BaseNativeT>::init(a1, a2, a3, a4)) {}
 
     internal:
         NativeT& ref() { return dynamic_cast<NativeT&>(BaseT::ref()); }

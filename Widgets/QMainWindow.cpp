@@ -13,12 +13,12 @@ QMainWindow::QMainWindow()
 }
 
 QMainWindow::QMainWindow(QWidget^ parent)
-    :   NativeInheritWrapper(init<NATIVE(QMainWindow)>(parent), true)
+    :   NativeInheritWrapper(init<NATIVE(QMainWindow)>(parent))
 {
 }
 
 QMainWindow::QMainWindow(QWidget^ parent, WindowType f)
-    :   NativeInheritWrapper(init<NATIVE(QMainWindow)>(parent, f), true)
+    :   NativeInheritWrapper(init<NATIVE(QMainWindow)>(parent, f))
 {
 }
 

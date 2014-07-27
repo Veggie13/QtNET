@@ -10,7 +10,8 @@ NAMESPACE_BEGIN;
     INHERIT_EXT_WRAPPER(QWidget, Core, QObject)
     {
     internal:
-        QWidget(NATIVE(QWidget)*, bool);
+        QWidget(NATIVE(QWidget)*);
+        QWidget(NATIVE(QWidget)&);
 
     public:
         QWidget();

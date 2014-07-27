@@ -23,7 +23,8 @@ public:
     void ignore();
 
 internal:
-    QEvent(NATIVE(QEvent)*, bool);
+    QEvent(NATIVE(QEvent)*);
+    QEvent(NATIVE(QEvent)&);
 };
 
 NAMESPACE_END;

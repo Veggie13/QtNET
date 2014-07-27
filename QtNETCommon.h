@@ -2,12 +2,14 @@
 
 #pragma warning (disable:4561 4679 4944)
 
-
+#include <memory>
 #include <msclr/marshal.h>
 #include "Wrapper.h"
 #include "MacroHelpers.h"
 
-#define DLL_NAME(x) MACRO(QtNET) ## NET ## x ##.dll
+#define ASM_NAME(x) MACRO(QtNET) ## NET ## x
+#define ASM_STR(x) STRING(ASM_NAME(x))
+#define DLL_NAME(x) MACRO(ASM_NAME(x)) ##.dll
 
 #define QtNET_CORE COMBINE_PATH(_BASE_REF_PATH,DLL_NAME(Core))
 #define QtNET_WIDGETS COMBINE_PATH(_BASE_REF_PATH,DLL_NAME(Widgets))
