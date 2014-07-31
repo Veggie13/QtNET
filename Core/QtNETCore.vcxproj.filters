@@ -29,6 +29,9 @@
     <ClCompile Include="QObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QString.h">
@@ -44,6 +47,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

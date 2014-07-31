@@ -25,6 +25,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="QChar.cpp" />
     <ClCompile Include="QEvent.cpp" />
+    <ClCompile Include="QMap.cpp" />
     <ClCompile Include="QObject.cpp" />
     <ClCompile Include="QString.cpp" />
     <ClCompile Include="QtNET.cpp">
@@ -34,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="QChar.h" />
     <ClInclude Include="QEvent.h" />
+    <ClInclude Include="QMap.h" />
     <ClInclude Include="QObject.h" />
     <ClInclude Include="QString.h" />
     <ClInclude Include="QtNET.h" />

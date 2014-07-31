@@ -27,6 +27,11 @@ String^ QString::ToString()
     return (String^)this;
 }
 
+int QString::GetHashCode()
+{
+    return ToString()->GetHashCode();
+}
+
 NATIVE(QString)* QString::init(String^ str)
 {
     pin_ptr<const wchar_t> p = PtrToStringChars(str);

@@ -19,6 +19,7 @@ NAMESPACE_BEGIN;
         QString(System::String^);
 
         virtual System::String^ ToString() override;
+        virtual int GetHashCode() override;
 
     protected:
         static NATIVE(QString)* init(System::String^);
