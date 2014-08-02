@@ -32,6 +32,33 @@ int QString::GetHashCode()
     return ToString()->GetHashCode();
 }
 
+bool QString::Equals(Object^ o)
+{
+    return Equals(dynamic_cast<QString^>(o));
+}
+
+int QString::CompareTo(QString^ other)
+{
+    if (ref() < other->ref())
+    {
+        return -1;
+    }
+    if (ref() > other->ref())
+    {
+        return 1;
+    }
+    return 0;
+}
+
+bool QString::Equals(QString^ other)
+{
+    if (other == nullptr)
+    {
+        return false;
+    }
+    return (ref() == other->ref());
+}
+
 NATIVE(QString)* QString::init(String^ str)
 {
     pin_ptr<const wchar_t> p = PtrToStringChars(str);

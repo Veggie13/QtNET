@@ -3,27 +3,16 @@
 #pragma managed (push, off)
 #include <QtCore/QMap>
 #pragma managed (pop)
+#include "NativeCollectionItem.h"
 
-namespace helper
-{
-    class NativeMapItem
-    {
-        gcroot<System::Object^> _item;
-    public:
-        NativeMapItem();
-        NativeMapItem(gcroot<System::Object^>);
-        friend bool operator < (const NativeMapItem&, const NativeMapItem&);
-        gcroot<System::Object^> Item();
-    };
-
-    bool operator < (const NativeMapItem&, const NativeMapItem&);
-}
 
 NAMESPACE_BEGIN;
 
+generic <typename T> ref class QList;
+
 generic <typename KeyT, typename ValueT>
 public ref class QMap
-    :   public NativeWrapper< NATIVE(MACRO(QMap<::helper::NativeMapItem, ::helper::NativeMapItem>)) >
+    :   public NativeWrapper< NATIVE(MACRO(QMap<::helper::NativeCollectionItem, ::helper::NativeCollectionItem>)) >
     ,   public System::Collections::Generic::IDictionary<KeyT, ValueT>
 {
     typedef LOCAL(MACRO(QMap<KeyT, ValueT>)) CurrT;
@@ -35,6 +24,9 @@ public ref class QMap
     typedef System::Collections::Generic::ICollection<ValueT> ValueCollectionI;
     typedef System::Collections::Generic::IEnumerable<KVP> EnumerableG;
     typedef System::Collections::Generic::IEnumerator<KVP> EnumeratorG;
+
+    ::helper::IObjectComparison^ _keyCompare;
+    ::helper::IObjectComparison^ _valCompare;
 
 public:
     QMap();
@@ -56,7 +48,12 @@ public:
 
     bool contains(KeyT);
 
-    // QList stuff maybe
+    QList<KeyT>^ uniqueKeys();
+    QList<KeyT>^ keys();
+    QList<KeyT>^ keys(ValueT);
+    QList<ValueT>^ values();
+    QList<ValueT>^ values(KeyT);
+    int count(KeyT);
 
 #pragma region IDictionary<>
 #pragma region ICollection<>

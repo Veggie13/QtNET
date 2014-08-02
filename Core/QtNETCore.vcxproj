@@ -23,8 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="NativeCollectionItem.cpp" />
     <ClCompile Include="QChar.cpp" />
     <ClCompile Include="QEvent.cpp" />
+    <ClCompile Include="QList.cpp" />
     <ClCompile Include="QMap.cpp" />
     <ClCompile Include="QObject.cpp" />
     <ClCompile Include="QString.cpp" />
@@ -33,8 +35,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NativeCollectionItem.h" />
     <ClInclude Include="QChar.h" />
     <ClInclude Include="QEvent.h" />
+    <ClInclude Include="QList.h" />
     <ClInclude Include="QMap.h" />
     <ClInclude Include="QObject.h" />
     <ClInclude Include="QString.h" />

@@ -7,6 +7,8 @@
 NAMESPACE_BEGIN;
 
     WRAPPER(QString)
+        , System::IComparable<LOCAL(QString)^>
+        , System::IEquatable<LOCAL(QString)^>
     {
     internal:
         QString(const NATIVE(QString)&);
@@ -20,6 +22,15 @@ NAMESPACE_BEGIN;
 
         virtual System::String^ ToString() override;
         virtual int GetHashCode() override;
+        virtual bool Equals(System::Object^) override;
+
+#pragma region IComparable<>
+        virtual int CompareTo(QString^);
+#pragma endregion
+
+#pragma region IEquatable<>
+        virtual bool Equals(QString^);
+#pragma endregion
 
     protected:
         static NATIVE(QString)* init(System::String^);

@@ -1,35 +1,10 @@
 #include "QtNET.h"
 
+#include "QList.h"
 #include "QMap.h"
 
 using namespace System;
 using namespace System::Collections::Generic;
-
-namespace helper
-{
-
-NativeMapItem::NativeMapItem()
-    :   _item(nullptr)
-{
-}
-
-NativeMapItem::NativeMapItem(gcroot<Object^> obj)
-    :   _item(obj)
-{
-}
-
-gcroot<Object^> NativeMapItem::Item()
-{
-    return _item;
-}
-
-bool operator < (const NativeMapItem& a, const NativeMapItem& b)
-{
-    return a._item->GetHashCode() < b._item->GetHashCode();
-}
-
-}
-
 using namespace helper;
 
 NAMESPACE_BEGIN;
@@ -37,12 +12,16 @@ NAMESPACE_BEGIN;
 generic <typename KeyT, typename ValueT>
 QMap<KeyT, ValueT>::QMap()
     :   NativeWrapper()
+    ,   _keyCompare( NativeCollectionItem::Comparison(KeyT::typeid) )
+    ,   _valCompare( NativeCollectionItem::Comparison(ValueT::typeid) )
 {
 }
 
 generic <typename KeyT, typename ValueT>
 QMap<KeyT, ValueT>::QMap(DictI^)
     :   NativeWrapper()
+    ,   _keyCompare( NativeCollectionItem::Comparison(KeyT::typeid) )
+    ,   _valCompare( NativeCollectionItem::Comparison(ValueT::typeid) )
 {
     throw gcnew NotImplementedException();
 }
@@ -50,6 +29,8 @@ QMap<KeyT, ValueT>::QMap(DictI^)
 generic <typename KeyT, typename ValueT>
 QMap<KeyT, ValueT>::QMap(CurrT^ other)
     :   NativeWrapper(other->ref())
+    ,   _keyCompare(other->_keyCompare)
+    ,   _valCompare(other->_valCompare)
 {
 }
 
@@ -98,20 +79,56 @@ void QMap<KeyT, ValueT>::clear()
 generic <typename KeyT, typename ValueT>
 int QMap<KeyT, ValueT>::remove(KeyT key)
 {
-    return ref().remove(NativeMapItem(key));
+    return ref().remove(NativeCollectionItem(_keyCompare, key));
 }
 
 generic <typename KeyT, typename ValueT>
 ValueT QMap<KeyT, ValueT>::take(KeyT key)
 {
-    Object^ taken = ref().take(NativeMapItem(key)).Item();
+    Object^ taken = ref().take(NativeCollectionItem(_keyCompare, key)).Item();
     return (ValueT)taken;
 }
 
 generic <typename KeyT, typename ValueT>
 bool QMap<KeyT, ValueT>::contains(KeyT key)
 {
-    return ref().contains(NativeMapItem(key));
+    return ref().contains(NativeCollectionItem(_keyCompare, key));
+}
+
+generic <typename KeyT, typename ValueT>
+QList<KeyT>^ QMap<KeyT, ValueT>::uniqueKeys()
+{
+    return gcnew QList<KeyT>( _keyCompare, ref().uniqueKeys() );
+}
+
+generic <typename KeyT, typename ValueT>
+QList<KeyT>^ QMap<KeyT, ValueT>::keys()
+{
+    return gcnew QList<KeyT>( _keyCompare, ref().keys() );
+}
+
+generic <typename KeyT, typename ValueT>
+QList<KeyT>^ QMap<KeyT, ValueT>::keys(ValueT val)
+{
+    return gcnew QList<KeyT>( _keyCompare, ref().keys(NativeCollectionItem(_valCompare, val)) );
+}
+
+generic <typename KeyT, typename ValueT>
+QList<ValueT>^ QMap<KeyT, ValueT>::values()
+{
+    return gcnew QList<ValueT>( _valCompare, ref().values() );
+}
+
+generic <typename KeyT, typename ValueT>
+QList<ValueT>^ QMap<KeyT, ValueT>::values(KeyT key)
+{
+    return gcnew QList<ValueT>( _valCompare, ref().values(NativeCollectionItem(_keyCompare, key)) );
+}
+
+generic <typename KeyT, typename ValueT>
+int QMap<KeyT, ValueT>::count(KeyT key)
+{
+    return ref().count(NativeCollectionItem(_keyCompare, key));
 }
 
 generic <typename KeyT, typename ValueT>
@@ -171,14 +188,14 @@ bool QMap<KeyT, ValueT>::Remove(KVP)
 generic <typename KeyT, typename ValueT>
 ValueT QMap<KeyT, ValueT>::default::get(KeyT key)
 {
-    Object^ val = ref()[NativeMapItem(key)].Item();
+    Object^ val = ref()[NativeCollectionItem(_keyCompare, key)].Item();
     return (ValueT)val;
 }
 
 generic <typename KeyT, typename ValueT>
 void QMap<KeyT, ValueT>::default::set(KeyT key, ValueT val)
 {
-    ref()[NativeMapItem(key)] = NativeMapItem(val);
+    ref()[NativeCollectionItem(_keyCompare, key)] = NativeCollectionItem(_valCompare, val);
 }
 
 generic <typename KeyT, typename ValueT>
@@ -202,7 +219,7 @@ bool QMap<KeyT, ValueT>::ContainsKey(KeyT key)
 generic <typename KeyT, typename ValueT>
 void QMap<KeyT, ValueT>::Add(KeyT key, ValueT val)
 {
-    ref()[NativeMapItem(key)] = NativeMapItem(val);
+    ref()[NativeCollectionItem(_keyCompare, key)] = NativeCollectionItem(_valCompare, val);
 }
 
 generic <typename KeyT, typename ValueT>
